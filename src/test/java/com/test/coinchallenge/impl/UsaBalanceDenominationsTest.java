@@ -1,8 +1,10 @@
 package com.test.coinchallenge.impl;
 
+import com.test.coinchallenge.enums.Country;
 import com.test.coinchallenge.enums.USD;
 import com.test.coinchallenge.exception.InvalidValueException;
 import com.test.coinchallenge.factory.BalanceDenominations;
+import com.test.coinchallenge.factory.BalanceDenominationsFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,7 +23,7 @@ public class UsaBalanceDenominationsTest {
 
     @BeforeEach
     public void init() {
-        bd = new UsaBalanceDenominations();
+        bd = BalanceDenominationsFactory.createBalanceDenomination(Country.USA);
     }
 
     @ParameterizedTest(name = "{0} should throw InvalidValueException")
