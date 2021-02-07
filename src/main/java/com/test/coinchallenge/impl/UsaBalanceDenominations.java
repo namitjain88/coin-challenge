@@ -5,7 +5,9 @@ import com.test.coinchallenge.enums.USD;
 import com.test.coinchallenge.exception.InvalidValueException;
 import com.test.coinchallenge.factory.BalanceDenominations;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class UsaBalanceDenominations extends BalanceDenominations {
@@ -21,5 +23,9 @@ public class UsaBalanceDenominations extends BalanceDenominations {
             }
         }
         return dMap;
+    }
+
+    public List<CurrencyMarker> getSupportedDenominations() {
+        return Arrays.asList(USD.values());
     }
 }

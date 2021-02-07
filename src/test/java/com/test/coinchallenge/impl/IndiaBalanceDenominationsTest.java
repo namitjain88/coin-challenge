@@ -1,23 +1,26 @@
 package com.test.coinchallenge.impl;
 
 import com.test.coinchallenge.enums.Country;
+import com.test.coinchallenge.enums.CurrencyMarker;
 import com.test.coinchallenge.enums.INR;
 import com.test.coinchallenge.exception.InvalidValueException;
 import com.test.coinchallenge.factory.BalanceDenominations;
 import com.test.coinchallenge.factory.BalanceDenominationsFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class IndiaBalanceDenominationsTest {
     private BalanceDenominations bd;
@@ -27,18 +30,32 @@ public class IndiaBalanceDenominationsTest {
         bd = BalanceDenominationsFactory.createBalanceDenomination(Country.INDIA);
     }
 
-    @ParameterizedTest(name = "{0} should throw InvalidValueException")
-    @DisplayName("Balance of ")
+    @ParameterizedTest(name = "balance as {0} should throw InvalidValueException")
+    @DisplayName("Testing invalid input balance value")
     @ValueSource(ints = {0, -1})
     public void testInvalidValueException(int balance) {
-        assertThrows(InvalidValueException.class, () -> bd.findBalanceDenominations(balance));
+        assertThrows(
+                InvalidValueException.class,
+                () -> bd.findBalanceDenominations(balance),
+                () -> "balance of " + balance + " should throw InvalidValueException.");
     }
 
-    @ParameterizedTest(name = "{1} should be returned as {2} ")
-    @DisplayName("Balance of ")
+    @ParameterizedTest(name = "balance of {1} should be returned as {2} ")
+    @DisplayName("Testing balance denominations")
     @MethodSource("fetchTestInputData")
     public void testFindBalanceDenominations(Map<INR, Integer> expectedDenMap, int balance, String testMsg) {
-        assertEquals(expectedDenMap, bd.findBalanceDenominations(balance), testMsg);
+        assertEquals(
+                expectedDenMap,
+                bd.findBalanceDenominations(balance),
+                () -> "balance of " + balance + " should be returned as " + testMsg);
+    }
+
+    @Test
+    @DisplayName("Testing supported denominations ")
+    public void testGetSupportedDenominations() {
+        List<CurrencyMarker> expected = Arrays.asList(INR.values());
+        List<CurrencyMarker> actual = bd.getSupportedDenominations();
+        assertIterableEquals(expected, actual, () -> "should be " + expected);
     }
 
     private static Stream<Arguments> fetchTestInputData() {
